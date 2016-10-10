@@ -31,11 +31,9 @@ class QuotesSpider(scrapy.Spider):
 			yield self.getData(quote.xpath('@href').extract_first())
 			Counter.count += 1
 
-		#pageString = 'page=' + str(Counter.pageCount)
-		#next_page = response.xpath('//div[@class="search_pagination_right"]//a[@class="pagebtn"]/@href').extract_first()
 		nplist = response.xpath('//div[@class="search_pagination_right"]//a[@class="pagebtn"]/@href').extract()
 		next_page = nplist[-1]
-		#Counter.pageCount += 1
+
 
 		if Counter.count <= 4000:
 			print(next_page)
@@ -69,42 +67,89 @@ class QuotesSpider(scrapy.Spider):
 
 		all = soup.find("div", class_="block_content_inner")
 		if all is None:
-			return None
-
+			return
 
 		alldiv = all.find("div")
-		allA = alldiv.find_all("a")
 
-		genreori = ""
-		genrenew = ""
+		genreOri = ""
+		genreNew = ""
 		genre = ""
-		i=0
-		while i<(len(allA)-2):
-			genrenew = allA[i].text
-			genre = str(genrenew) + "/" +str(genreori)
-			genreori = genre
-			i += 1
-		#print genre
 
-		publish = allA[-1]
-		if publish is None:
-		    publisher = ""
-		else:
-		    publisher = publish.text
-		    # while "," in publisher:
-		    #     publisher = publisher.replace(",","/")
-		    publisher = publisher.strip()
-		#print publisher
+		genreRow = alldiv.find('b', string = 'Genre:')
+		if genreRow is not None:
+			nextSibs = genreRow.find_next_siblings('a')
+			for nextSib in nextSibs:
+			    genreNew = nextSib.text
+			    genre = genreOri + "/" + genreNew
+			    genreOri = genre
+			print genre
 
-		developer = allA[-2]
-		if developer is None:
-		    developer = ""
-		else:
-		    developer = developer.text
-		    # while "," in developer:
-		    #     developer = developer.replace(",","/")
-		    developer = developer.strip()
-			#print developer
+		developerOri = ""
+		developerNew = ""
+		developer = ""
+
+		developerRow = alldiv.find('b', string = "Developer:")
+		if developerRow is not None:
+			nextSibs = developerRow.find_next_siblings('a')
+			for nextSib in nextSibs:
+			    developerNew = nextSib.text
+			    developer = developerOri + "/" + developerNew
+			    developerOri = developer
+			print developer
+
+		publisherOri = ""
+		publisherNew = ""
+		publisher = ""
+
+		publisherRow = alldiv.find('b', string = "Publisher:")
+		if publisherRow is not None:
+			nextSibs = publisherRow.find_next_siblings('a')
+			for nextSib in nextSibs:
+			    publisherNew = nextSib.text
+			    publisher = publisherOri + "/" + publisherNew
+			    publisherOri = publisher
+			print publisher
+
+
+
+		# all = soup.find("div", class_="block_content_inner")
+		# if all is None:
+		# 	return None
+
+
+		# alldiv = all.find("div")
+		# allA = alldiv.find_all("a")
+
+		# genreori = ""
+		# genrenew = ""
+		# genre = ""
+		# i=0
+		# while i<(len(allA)-2):
+		# 	genrenew = allA[i].text
+		# 	genre = str(genrenew) + "/" +str(genreori)
+		# 	genreori = genre
+		# 	i += 1
+		# #print genre
+
+		# publish = allA[-1]
+		# if publish is None:
+		#     publisher = ""
+		# else:
+		#     publisher = publish.text
+		#     # while "," in publisher:
+		#     #     publisher = publisher.replace(",","/")
+		#     publisher = publisher.strip()
+		# #print publisher
+
+		# developer = allA[-2]
+		# if developer is None:
+		#     developer = ""
+		# else:
+		#     developer = developer.text
+		#     # while "," in developer:
+		#     #     developer = developer.replace(",","/")
+		#     developer = developer.strip()
+		# 	#print developer
 
 		review = soup.find("span",{"itemprop" : "description"})
 		review_detail = soup.find("span",{"class" : "nonresponsive_hidden responsive_reviewdesc"})
