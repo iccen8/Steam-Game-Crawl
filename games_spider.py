@@ -9,7 +9,6 @@ headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleW
 
 class Counter:
 	count = 1
-	#pageCount = 2
 
 class responseObj:
 	r = requests.session()
@@ -82,7 +81,7 @@ class QuotesSpider(scrapy.Spider):
 			    genreNew = nextSib.text
 			    genre = genreOri + "/" + genreNew
 			    genreOri = genre
-			print genre
+			# print genre
 
 		developerOri = ""
 		developerNew = ""
@@ -95,7 +94,7 @@ class QuotesSpider(scrapy.Spider):
 			    developerNew = nextSib.text
 			    developer = developerOri + "/" + developerNew
 			    developerOri = developer
-			print developer
+			# print developer
 
 		publisherOri = ""
 		publisherNew = ""
@@ -108,48 +107,7 @@ class QuotesSpider(scrapy.Spider):
 			    publisherNew = nextSib.text
 			    publisher = publisherOri + "/" + publisherNew
 			    publisherOri = publisher
-			print publisher
-
-
-
-		# all = soup.find("div", class_="block_content_inner")
-		# if all is None:
-		# 	return None
-
-
-		# alldiv = all.find("div")
-		# allA = alldiv.find_all("a")
-
-		# genreori = ""
-		# genrenew = ""
-		# genre = ""
-		# i=0
-		# while i<(len(allA)-2):
-		# 	genrenew = allA[i].text
-		# 	genre = str(genrenew) + "/" +str(genreori)
-		# 	genreori = genre
-		# 	i += 1
-		# #print genre
-
-		# publish = allA[-1]
-		# if publish is None:
-		#     publisher = ""
-		# else:
-		#     publisher = publish.text
-		#     # while "," in publisher:
-		#     #     publisher = publisher.replace(",","/")
-		#     publisher = publisher.strip()
-		# #print publisher
-
-		# developer = allA[-2]
-		# if developer is None:
-		#     developer = ""
-		# else:
-		#     developer = developer.text
-		#     # while "," in developer:
-		#     #     developer = developer.replace(",","/")
-		#     developer = developer.strip()
-		# 	#print developer
+			# print publisher
 
 		review = soup.find("span",{"itemprop" : "description"})
 		review_detail = soup.find("span",{"class" : "nonresponsive_hidden responsive_reviewdesc"})
@@ -173,17 +131,6 @@ class QuotesSpider(scrapy.Spider):
 		result['review'] = review
 		result['review_detail'] = review_detail
 		
-
-		# result = {
-		# 	'id': Counter.count,
-		# 	'title': gameName,
-		# 	'releaseDate': release,
-		# 	'publisher': publisher,
-		# 	'developer': developer,
-		# 	'genre': genre,
-		# 	'review': review,
-		# 	'review_detail': review_detail,
-		# }
 	
 		return result
 
